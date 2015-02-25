@@ -28,7 +28,7 @@ class Dvd
         {
             $query->where('rating_id', '=', $rating);
         }
-        
+        $query->select('dvds.*', 'ratings.rating_name', 'genres.genre_name', 'labels.label_name', 'sounds.sound_name', 'formats.format_name');
         return $query->get();
     }
     
@@ -58,5 +58,35 @@ class Dvd
             ->where('id', '=', $rating_id)
             ->select('rating_name');
         return $query->first();
+    }
+    
+    public function getDvdInfo($id)
+    {
+        $query = DB::table('dvds')
+            ->join('genres', 'genres.id', '=', 'dvds.genre_id')
+            ->join('ratings', 'ratings.id', '=', 'dvds.rating_id')
+            ->join('labels', 'labels.id', '=', 'dvds.label_id')
+            ->join('sounds', 'sounds.id', '=', 'dvds.sound_id')
+            ->join('formats', 'formats.id', '=', 'dvds.format_id')
+            ->where('dvds.id' , '=', $id);
+        $query->select('dvds.*', 'ratings.rating_name', 'genres.genre_name', 'labels.label_name', 'sounds.sound_name', 'formats.format_name');
+        return $query->first();
+    }
+    
+    public function getReviews($id)
+    {
+        $query = DB::table('reviews')
+            ->where('dvd_id', '=', $id);
+        return $query->get();
+    }
+    
+    public function addReview($title, $rating, $description, $id)
+    {
+        DB::table('reviews')->insert([
+            'title' => $title,
+            'description' => $description,
+            'dvd_id' => $id,
+            'rating' => $rating
+        ]);
     }
 }

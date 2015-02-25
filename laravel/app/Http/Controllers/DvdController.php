@@ -41,5 +41,37 @@ class DvdController extends Controller
             'rating_chosen' => $rating,
             'dvds' => $dvds
         ]);
-    }         
+    } 
+    
+    public function showDetails($id)
+    {
+        $query = new Dvd();
+        $dvd = $query->getDvdInfo($id);
+        $reviews = $query->getReviews($id);
+        return view('reviews', [
+            'dvd' => $dvd,
+            'reviews' => $reviews
+        ]);
+    }
+    
+    public function submitReview($id, Request $request)
+    {
+        $validation = \Validator::make($request->all(), [
+            'title' => 'required|min:5',
+            'rating' => 'required|numeric|between:1,10',
+            'review' => 'required|min:20'
+        ]);
+        if($validation->passes())
+        {
+            $query = new Dvd();
+            $query->addReview($request->input('title'), $request->input('rating'), $request->input('review'), $id);
+            return redirect('dvds/'.$id)->with('success', 'Review successfully submitted');
+        }
+        else
+        {
+            return redirect('dvds/'.$id)
+                ->withInput()
+                ->withErrors($validation);
+        }
+    }
 }

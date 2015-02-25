@@ -27,7 +27,7 @@
         <tbody>
             <?php foreach($dvds as $dvd) : ?>
                 <tr>
-                    <td><?php echo $dvd->title ?></td>
+                    <td><?php echo $dvd->title ?><a href="/dvds/<?php echo $dvd->id ?>"> (Review)</a></td>
                     <td><?php echo $dvd->rating_name ?></td>
                     <td><?php echo $dvd->genre_name ?></td>
                     <td><?php echo $dvd->label_name ?></td>

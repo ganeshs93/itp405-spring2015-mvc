@@ -19,6 +19,10 @@ Route::get('/dvds', 'DvdController@results');
 
 Route::get('/dvds/search', 'DvdController@search');
 
+Route::get('dvds/{id}', 'DvdController@showDetails');
+
+Route::post('/dvds/{id}/submit_review', 'DvdController@submitReview');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
