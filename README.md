@@ -1,2 +1,2 @@
 # itp405-spring2015-mvc
-Ganesh Sivakumar Assignment 4 and 5
+Ganesh Sivakumar Assignments 4, 5, and 6

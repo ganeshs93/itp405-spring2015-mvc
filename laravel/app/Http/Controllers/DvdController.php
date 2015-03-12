@@ -74,4 +74,44 @@ class DvdController extends Controller
                 ->withErrors($validation);
         }
     }
+    
+    public function createDvd()
+    {
+        $model = new Dvd();
+        $labels = $model->getAllLabels();
+        $sounds = $model->getAllSounds();
+        $formats = $model->getAllFormats();
+        $genres = $model->getAllGenres();
+        $ratings = $model->getAllRatings();
+        return view('createDvd', [
+            'labels' => $labels,
+            'sounds' => $sounds,
+            'formats' => $formats,
+            'genres' => $genres,
+            'ratings' => $ratings
+        ]);   
+    }
+    
+    public function submitNewDvd(Request $request)
+    {
+        $dvd = new Dvd();
+        $dvd->title = $request->input('dvd_title');
+        $dvd->label_id = $request->input('label_id');
+        $dvd->sound_id = $request->input('sound_id');
+        $dvd->genre_id = $request->input('genre_id');
+        $dvd->rating_id = $request->input('rating_id');
+        $dvd->format_id = $request->input('format_id');
+        $dvd->save();
+        return redirect('/dvds/create')->with('success', 'Dvd successfully submitted');   
+    }
+    
+    public function dvdsByGenre($genreName)
+    {
+        $model = new Dvd();
+        $dvds = $model->getDvdsByGenreName($genreName);
+        return view('dvdsByGenre', [
+            'dvds' => $dvds,
+            'genreName' => $genreName
+        ]);
+    }
 }

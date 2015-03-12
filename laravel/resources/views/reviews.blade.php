@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
     @if($dvd)
         <title>{{$dvd->title}} Ratings</title>
@@ -116,3 +117,4 @@
     <script src="http://code.jquery.com/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 </body>
+</html>

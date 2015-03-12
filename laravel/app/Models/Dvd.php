@@ -2,9 +2,12 @@
 namespace App\Models;
 
 use DB;
+use Illuminate\Database\Eloquent\Model;
 
-class Dvd
+class Dvd extends Model
 {
+    protected $table = 'dvds';
+    
     public function search($term, $genre, $rating)
     {
         $query = DB::table('dvds')
@@ -34,16 +37,40 @@ class Dvd
     
     public function getAllGenres()
     {
-         $query = DB::table('genres');
-        return $query->get();
+        return Genres::all();
     }
     
     public function getAllRatings()
     {
-        $query = DB::table('ratings');
-        return $query->get();
+        return Ratings::all();
     }
     
+    public function getAllLabels()
+    {
+        return Labels::all();   
+    }
+    
+    public function getAllSounds()
+    {
+        return Sounds::all();   
+    }
+    
+    public function getAllFormats()
+    {
+        return Formats::all();   
+    }
+    
+    
+    public function getDvdsByGenreName($genreName)
+    {
+        $dvds = self::with('ratings', 'genres', 'labels')
+            ->whereHas('genres', function($query) use($genreName)
+            {
+                $query->where('genre_name', '=', $genreName);
+            })
+            ->get();
+        return $dvds;
+    }
     public function getGenreName($genre_id)
     {
         $query = DB::table('genres')
@@ -88,5 +115,30 @@ class Dvd
             'dvd_id' => $id,
             'rating' => $rating
         ]);
+    }
+    
+    public function labels()
+    {
+        return $this->belongsTo('App\Models\Labels', 'label_id');
+    }
+    
+    public function sounds()
+    {
+        return $this->belongsTo('App\Models\Sounds', 'sound_id');
+    }
+    
+    public function genres()
+    {
+        return $this->belongsTo('App\Models\Genres', 'genre_id');
+    }
+    
+    public function ratings()
+    {
+        return $this->belongsTo('App\Models\Ratings', 'rating_id');
+    }
+    
+    public function formats()
+    {
+        return $this->belongsTo('App\Models\Formats', 'format_id');
     }
 }

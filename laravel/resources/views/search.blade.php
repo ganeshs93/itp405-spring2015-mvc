@@ -9,6 +9,16 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <body>
+    <nav>
+        <div class="col-md-12">
+            <ul class="nav nav-pills">
+                @foreach($genres as $genre)
+                <li role="presentation"><a href="/genres/{{$genre->genre_name}}/dvds">{{$genre->genre_name}}</a></li>
+                @endforeach
+            </ul>
+        </div>
+    </nav>
+    <div class="clearfix visible-lg-block"></div>
     <form action="/dvds" method="get">
         <div class="col-md-2">
             <div class="form-group">
@@ -22,9 +32,9 @@
                 <label>Genre</label>
                 <select class="form-control" name="genre_id">
                     <option value="0">All</option>
-                    <?php foreach($genres as $genre) : ?>
-                        <option value="<?php echo $genre->id ?>"><?php echo $genre->genre_name ?></option>
-                    <?php endforeach ?>
+                    @foreach($genres as $genre)
+                        <option value="{{$genre->id}}">{{$genre->genre_name}}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -34,9 +44,9 @@
                 <label>Rating</label>
                 <select class="form-control" name="rating_id">
                     <option value="0">All</option>
-                    <?php foreach($ratings as $rating) : ?>
-                        <option value="<?php echo $rating->id ?>"><?php echo $rating->rating_name ?></option>
-                    <?php endforeach ?>
+                    @foreach($ratings as $rating)
+                        <option value="{{$rating->id}}">{{$rating->rating_name}}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
