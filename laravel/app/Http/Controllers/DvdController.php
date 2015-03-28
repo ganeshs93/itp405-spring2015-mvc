@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\Dvd;
+use App\Services\RottenTomatoes;
+use App\Services\RottenTomatoesObject;
+use Illuminate\Support\Facades\Cache;
 
 class DvdController extends Controller
 {
@@ -35,11 +38,44 @@ class DvdController extends Controller
         //var_dump($genre);
         //var_dump($rating);
         //dd($dvds);
+        if (Cache::has("rottentomatoes-$request->input('dvd_title')"))
+        {
+            echo 'Cache used';
+            $rtResults = Cache::get("rottentomatoes-$request->input('dvd_title')");
+        }     
+        else
+        {
+            $rtAPI = new RottenTomatoes();
+            $rtResults = array();
+            foreach($dvds as $dvd)
+            {
+                $results = $rtAPI->search($dvd->title);
+                $movieFound = false;
+                foreach ($results as $movie)
+                {
+                    if ($movie->title == $dvd->title)
+                    {
+                        $movieFound = true;
+                        $rtObject = new RottenTomatoesObject($movie->ratings->critics_score, $movie->ratings->audience_score, $movie->posters->thumbnail, $movie->runtime, $movie->abridged_cast);
+                    }
+                }
+                if ($movieFound)
+                {
+                    $rtResults[] = $rtObject;   
+                }
+                else
+                {
+                    $rtResults[] = null;
+                }
+            }
+            Cache::put("rottentomatoes-$request->input('dvd_title')", $rtResults, 60);
+        }
         return view('results', [
             'search_term' => $request->input('dvd_title'),
             'genre_chosen' => $genre,
             'rating_chosen' => $rating,
-            'dvds' => $dvds
+            'dvds' => $dvds,
+            'rtResults' => $rtResults
         ]);
     } 
     

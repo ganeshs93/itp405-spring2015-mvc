@@ -22,10 +22,16 @@
                 <th>Sound</th>
                 <th>Format</th>
                 <th>Release Date</th>
+                <th>Critic Score</th>
+                <th>Audience Score</th>
+                <th>Poster</th>
+                <th>Runtime</th>
+                <th>Cast</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach($dvds as $dvd) : ?>
+            @for($x = 0; $x < count($dvds); $x++)
+                <?php $dvd = $dvds[$x]; ?>
                 <tr>
                     <td><?php echo $dvd->title ?><a href="/dvds/<?php echo $dvd->id ?>"> (Review)</a></td>
                     <td><?php echo $dvd->rating_name ?></td>
@@ -34,8 +40,21 @@
                     <td><?php echo $dvd->sound_name ?></td>
                     <td><?php echo $dvd->format_name ?></td>
                     <td><?php echo date('F d, Y h:mA', strtotime($dvd->release_date)) ?></td>
+                    @if($x < count($rtResults) && $rtResults[$x])
+                        <td>{{$rtResults[$x]->criticScore}}</td>
+                        <td>{{$rtResults[$x]->audienceScore}}</td>
+                        <td><img src="{{$rtResults[$x]->image}}"></td>
+                        <td>{{$rtResults[$x]->runtime}}</td>
+                        <td>{{$rtResults[$x]->abridgedCast}}</td>
+                    @else
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                    @endif
                 </tr>
-            <?php endforeach ?>
+            @endfor
         </tbody>
     </table>
     
